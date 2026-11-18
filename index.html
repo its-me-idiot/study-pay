@@ -119,14 +119,14 @@
       color: #ffffff;
       border: none;
       border-radius: 14px;
-      padding: 14px;
+      padding: 14px 16px;
       font-size: 1.05rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       text-decoration: none;
       box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
       transition: transform 0.15s ease, filter 0.15s ease;
@@ -136,40 +136,55 @@
       transform: scale(0.98);
       filter: brightness(1.1);
     }
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    .action-card {
+      display: flex;
+      flex-direction: column;
       gap: 8px;
       width: 100%;
     }
-    .app-btn {
-      padding: 10px 4px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-decoration: none;
-      color: #ffffff;
-      text-align: center;
+    .supported-strip {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
-      transition: transform 0.15s ease;
-      border: none;
+      gap: 6px;
+      padding: 4px 0;
+    }
+    .supported-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      color: var(--hint-color);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+    }
+    .app-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 4px 9px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-color);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       cursor: pointer;
-      font-family: inherit;
+      transition: background 0.15s ease;
     }
-    .app-btn:active {
-      transform: scale(0.96);
+    .app-chip:active {
+      background: rgba(255, 255, 255, 0.12);
     }
-    .app-btn.phonepe {
-      background: var(--phonepe);
-    }
-    .app-btn.gpay {
-      background: #1e7e34;
-    }
-    .app-btn.paytm {
-      background: #0077b6;
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
     }
     .qr-card {
       background: var(--card-bg);
@@ -256,25 +271,29 @@
       </div>
     </div>
 
-    <!-- PRIMARY 1-CLICK ACTION -->
-    <button type="button" class="btn-main" id="primaryPayBtn" onclick="launchPayment('upi')">
-      <span>🚀 Open UPI App to Pay</span>
-    </button>
+    <!-- PRIMARY UNIVERSAL 1-TAP ACTION -->
+    <div class="action-card">
+      <button type="button" class="btn-main" id="primaryPayBtn" onclick="launchPayment('upi')">
+        <span style="font-size: 1.35rem;">⚡</span>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left; line-height: 1.25;">
+          <span style="font-weight: 800; font-size: 1.05rem;" id="primaryPayText">Pay ₹0.00 with Any UPI App</span>
+          <span style="font-size: 0.72rem; opacity: 0.88; font-weight: 500;">Pops up GPay, PhonePe, Paytm, CRED, BHIM & All Banks</span>
+        </div>
+      </button>
 
-    <!-- APP-SPECIFIC INTENTS -->
-    <div class="app-grid">
-      <button type="button" class="app-btn phonepe" id="phonepeBtn" onclick="launchPayment('phonepe')">
-        <span>🟣 PhonePe</span>
-        <span style="font-size: 0.65rem; opacity: 0.8;">1-Click</span>
-      </button>
-      <button type="button" class="app-btn gpay" id="gpayBtn" onclick="launchPayment('gpay')">
-        <span>🟢 GPay</span>
-        <span style="font-size: 0.65rem; opacity: 0.8;">Direct</span>
-      </button>
-      <button type="button" class="app-btn paytm" id="paytmBtn" onclick="launchPayment('paytm')">
-        <span>🔵 Paytm</span>
-        <span style="font-size: 0.65rem; opacity: 0.8;">Direct</span>
-      </button>
+      <!-- SUPPORTED APPS REASSURANCE STRIP -->
+      <div class="supported-strip">
+        <div class="supported-label">SUPPORTED APPS (AUTO-DETECTED ON YOUR PHONE)</div>
+        <div class="badge-row">
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#4285F4;"></span>GPay</span>
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#5f259f;"></span>PhonePe</span>
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#00b9f5;"></span>Paytm</span>
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#ffffff;"></span>CRED</span>
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#00a884;"></span>BHIM</span>
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#f59e0b;"></span>Navi</span>
+          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#38bdf8;"></span>Any Bank</span>
+        </div>
+      </div>
     </div>
 
     <!-- DYNAMIC QR SCANNER -->
@@ -311,7 +330,7 @@
     const upiUri = `upi://pay?pa=${vpa}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}&cu=INR`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&data=${encodeURIComponent(upiUri)}`;
 
-    document.getElementById('primaryPayBtn').innerHTML = `<span>🚀 Open UPI App to Pay ₹${amount}</span>`;
+    document.getElementById('primaryPayText').innerText = `Pay ₹${amount} with Any UPI App`;
     document.getElementById('qrImg').src = qrUrl;
 
     function launchPayment(targetApp) {
