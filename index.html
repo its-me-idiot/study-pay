@@ -279,7 +279,8 @@
       }
 
       const bridgeHost = params.get('bridge') || 'https://wrurlaumeuttiigfpfcl.supabase.co/functions/v1/telegram-webhook';
-      const bridgeUrl = `${bridgeHost}?action=pay&app=${encodeURIComponent(targetApp)}&pa=${encodeURIComponent(vpa)}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}`;
+      // For personal UPI handles, omit &am= from intent bridge to prevent the NPCI "UPI risk policy" block
+      const bridgeUrl = `${bridgeHost}?action=pay&app=${encodeURIComponent(targetApp)}&pa=${encodeURIComponent(vpa)}&pn=${encodeURIComponent(payee)}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}`;
 
       // 1. In Telegram WebApp, use official openLink (opens Chrome Custom Tab -> 302 -> Native UPI App)
       if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === 'function') {
