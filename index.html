@@ -137,54 +137,7 @@
       filter: brightness(1.1);
     }
     .action-card {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
       width: 100%;
-    }
-    .supported-strip {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 0;
-    }
-    .supported-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.05em;
-      color: var(--hint-color);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-    }
-    .app-chip {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 4px 9px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text-color);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      transition: background 0.15s ease;
-    }
-    .app-chip:active {
-      background: rgba(255, 255, 255, 0.12);
-    }
-    .chip-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
     }
     .qr-card {
       background: var(--card-bg);
@@ -274,26 +227,12 @@
     <!-- PRIMARY UNIVERSAL 1-TAP ACTION -->
     <div class="action-card">
       <button type="button" class="btn-main" id="primaryPayBtn" onclick="launchPayment('upi')">
-        <span style="font-size: 1.35rem;">⚡</span>
+        <span style="font-size: 1.4rem;">⚡</span>
         <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left; line-height: 1.25;">
           <span style="font-weight: 800; font-size: 1.05rem;" id="primaryPayText">Pay ₹0.00 with Any UPI App</span>
-          <span style="font-size: 0.72rem; opacity: 0.88; font-weight: 500;">Pops up GPay, PhonePe, Paytm, CRED, BHIM & All Banks</span>
+          <span style="font-size: 0.72rem; opacity: 0.88; font-weight: 500;">Pops up your installed UPI apps (GPay, PhonePe, Paytm, CRED & Banks)</span>
         </div>
       </button>
-
-      <!-- SUPPORTED APPS REASSURANCE STRIP -->
-      <div class="supported-strip">
-        <div class="supported-label">SUPPORTED APPS (AUTO-DETECTED ON YOUR PHONE)</div>
-        <div class="badge-row">
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#4285F4;"></span>GPay</span>
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#5f259f;"></span>PhonePe</span>
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#00b9f5;"></span>Paytm</span>
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#ffffff;"></span>CRED</span>
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#00a884;"></span>BHIM</span>
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#f59e0b;"></span>Navi</span>
-          <span class="app-chip" onclick="launchPayment('upi')"><span class="chip-dot" style="background:#38bdf8;"></span>Any Bank</span>
-        </div>
-      </div>
     </div>
 
     <!-- DYNAMIC QR SCANNER -->
