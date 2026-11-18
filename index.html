@@ -130,6 +130,7 @@
       text-decoration: none;
       box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
       transition: transform 0.15s ease, filter 0.15s ease;
+      font-family: inherit;
     }
     .btn-main:active {
       transform: scale(0.98);
@@ -154,6 +155,9 @@
       align-items: center;
       gap: 3px;
       transition: transform 0.15s ease;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
     }
     .app-btn:active {
       transform: scale(0.96);
@@ -253,24 +257,24 @@
     </div>
 
     <!-- PRIMARY 1-CLICK ACTION -->
-    <a href="#" class="btn-main" id="primaryPayBtn">
+    <button type="button" class="btn-main" id="primaryPayBtn" onclick="launchPayment('upi')">
       <span>🚀 Open UPI App to Pay</span>
-    </a>
+    </button>
 
     <!-- APP-SPECIFIC INTENTS -->
     <div class="app-grid">
-      <a href="#" class="app-btn phonepe" id="phonepeBtn">
+      <button type="button" class="app-btn phonepe" id="phonepeBtn" onclick="launchPayment('phonepe')">
         <span>🟣 PhonePe</span>
         <span style="font-size: 0.65rem; opacity: 0.8;">1-Click</span>
-      </a>
-      <a href="#" class="app-btn gpay" id="gpayBtn">
+      </button>
+      <button type="button" class="app-btn gpay" id="gpayBtn" onclick="launchPayment('gpay')">
         <span>🟢 GPay</span>
         <span style="font-size: 0.65rem; opacity: 0.8;">Direct</span>
-      </a>
-      <a href="#" class="app-btn paytm" id="paytmBtn">
+      </button>
+      <button type="button" class="app-btn paytm" id="paytmBtn" onclick="launchPayment('paytm')">
         <span>🔵 Paytm</span>
         <span style="font-size: 0.65rem; opacity: 0.8;">Direct</span>
-      </a>
+      </button>
     </div>
 
     <!-- DYNAMIC QR SCANNER -->
@@ -305,17 +309,33 @@
     document.getElementById('refText').innerText = ref;
 
     const upiUri = `upi://pay?pa=${vpa}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}&cu=INR`;
-    const phonepeUri = `phonepe://pay?pa=${vpa}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}&cu=INR`;
-    const gpayUri = `gpay://upi/pay?pa=${vpa}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}&cu=INR`;
-    const paytmUri = `paytmmp://pay?pa=${vpa}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}&cu=INR`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&data=${encodeURIComponent(upiUri)}`;
 
-    document.getElementById('primaryPayBtn').href = upiUri;
     document.getElementById('primaryPayBtn').innerHTML = `<span>🚀 Open UPI App to Pay ₹${amount}</span>`;
-    document.getElementById('phonepeBtn').href = phonepeUri;
-    document.getElementById('gpayBtn').href = gpayUri;
-    document.getElementById('paytmBtn').href = paytmUri;
     document.getElementById('qrImg').src = qrUrl;
+
+    function launchPayment(targetApp) {
+      if (!vpa) {
+        alert("UPI ID is not configured.");
+        return;
+      }
+
+      const bridgeHost = params.get('bridge') || 'https://wrurlaumeuttiigfpfcl.supabase.co/functions/v1/telegram-webhook';
+      const bridgeUrl = `${bridgeHost}?action=pay&app=${encodeURIComponent(targetApp)}&pa=${encodeURIComponent(vpa)}&pn=${encodeURIComponent(payee)}&am=${amount}&tr=${encodeURIComponent(ref)}&tn=${encodeURIComponent(note)}`;
+
+      // 1. In Telegram WebApp, use official openLink (opens Chrome Custom Tab -> 302 -> Native UPI App)
+      if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === 'function') {
+        try {
+          window.Telegram.WebApp.openLink(bridgeUrl);
+          return;
+        } catch (e) {
+          console.warn("Telegram.WebApp.openLink failed, falling back:", e);
+        }
+      }
+
+      // 2. Direct browser fallback
+      window.location.href = bridgeUrl;
+    }
 
     if (window.Telegram && window.Telegram.WebApp) {
       const tg = window.Telegram.WebApp;
