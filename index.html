@@ -285,6 +285,22 @@
       if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === 'function') {
         try {
           window.Telegram.WebApp.openLink(bridgeUrl);
+
+          // Auto-collapse / close Mini App so when student finishes payment in PhonePe/GPay,
+          // they return directly to the Telegram chat without any hanging window!
+          setTimeout(() => {
+            try {
+              if (window.Telegram && window.Telegram.WebApp) {
+                if (typeof window.Telegram.WebApp.disableClosingConfirmation === 'function') {
+                  window.Telegram.WebApp.disableClosingConfirmation();
+                }
+                window.Telegram.WebApp.close();
+              }
+            } catch (closeErr) {
+              console.warn("Auto-close Mini App caught error:", closeErr);
+            }
+          }, 600);
+
           return;
         } catch (e) {
           console.warn("Telegram.WebApp.openLink failed, falling back:", e);
